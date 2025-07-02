@@ -14,6 +14,7 @@ import { catchError, of } from 'rxjs';
 })
 export class App implements OnInit {
     users: IUser[] | undefined;
+    errorLoadingUsers = false;
 
     constructor(public userService: UserService) { }
 
@@ -23,11 +24,15 @@ export class App implements OnInit {
 
     loadUsers(search?: string): void {
         this.users = undefined;
+        this.errorLoadingUsers = false;
         this.userService.loadUsers(search).pipe(
             catchError(() => of([]))
         ).subscribe({
             next: users => this.users = users,
-            error: error => console.error(error),
+            error: error => {
+                console.error(error);
+                this.errorLoadingUsers = true;
+            },
             complete: () => console.log('load users stream completed')
         })
 

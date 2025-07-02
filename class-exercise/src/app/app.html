@@ -5,6 +5,7 @@
 
 <div id="content">
     <input #searchInput [class.hidden]="!users" type="text">
+    <div class="error" *ngIf="errorLoadingUsers">Error loading users! check your connection!</div>
     <div *ngIf="users">
         <button (click)="reloadButtonHandler()">Reload</button>
         <button (click)="searchButtonClickHandler(searchInput)">Search</button>
