@@ -4,6 +4,7 @@ import { UserService } from './user.service';
 import { IUser } from './interfaces/user';
 import { CommonModule } from '@angular/common';
 import { TimeComponent } from './time.component/time.component';
+import { catchError, of } from 'rxjs';
 
 @Component({
     selector: 'app-root',
@@ -13,7 +14,8 @@ import { TimeComponent } from './time.component/time.component';
 })
 export class App implements OnInit {
     users: IUser[] | undefined;
-    constructor(public userService: UserService) {}
+
+    constructor(public userService: UserService) { }
 
     ngOnInit(): void {
         this.loadUsers();
@@ -21,11 +23,13 @@ export class App implements OnInit {
 
     loadUsers(search?: string): void {
         this.users = undefined;
-        this.userService.loadUsers(search).subscribe(
-            users => this.users = users, // next fn
-            error => console.error(error), // error fn
-            () => console.log('load users stream completed') // cmpleted fn
-        );
+        this.userService.loadUsers(search).pipe(
+            catchError(() => of([]))
+        ).subscribe({
+            next: users => this.users = users,
+            error: error => console.error(error),
+            complete: () => console.log('load users stream completed')
+        })
 
         /* this.userService.loadUsers(search).subscribe({
             next: () => {},
@@ -39,7 +43,7 @@ export class App implements OnInit {
     }
 
     searchButtonClickHandler(searchInput: HTMLInputElement): void {
-        const {value} = searchInput;
+        const { value } = searchInput;
         this.loadUsers(value)
     }
 }

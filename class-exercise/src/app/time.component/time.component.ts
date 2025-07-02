@@ -7,7 +7,7 @@ import { interval, map, startWith, Subscription } from 'rxjs';
   templateUrl: './time.component.html',
   styleUrl: './time.component.css'
 })
-export class implements OnDestroy {
+export class TimeComponent implements OnDestroy {
 
     timeStreamSubscription: Subscription;
 
