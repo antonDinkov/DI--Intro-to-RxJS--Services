@@ -10,9 +10,9 @@ import { IUser } from '../interfaces/user';
 })
 export class UserListItemComponent implements OnInit {
     @Input() user: IUser | undefined;
+    
     constructor() { }
 
     ngOnInit(): void {
-        console.log('I work too')
     }
 }

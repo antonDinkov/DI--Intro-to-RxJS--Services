@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { IUser } from './interfaces/user';
 import { myStringInjectionToken } from './token';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
@@ -8,26 +9,13 @@ import { myStringInjectionToken } from './token';
 export class UserService {
     protected title = 'class-exercise';
 
-    users = [
-        {
-            name: 'Ivan 1',
-            age: 21
-        },
-        {
-            name: 'Ivan 2',
-            age: 22
-        },
-        {
-            name: 'Ivan 3',
-            age: 23
-        }
-    ];
-    constructor(@Inject(myStringInjectionToken) myString: string) {
-        console.log(myString)
+    constructor(private http: HttpClient) {
+        
     }
 
-    addNewUserHandler(newUser: IUser): void {
-        this.users = this.users.concat(newUser);
-        /* this.users.push(newUser); */
+    loadUsers(search: string = '') {
+        const query = search ? `?email_like=${search}` : '';
+        return this.http.get<IUser[]>(`https://jsonplaceholder.typicode.com/users${query}`);
     }
+
 }
